@@ -6,7 +6,7 @@ export const getCalendarDays = (year: number, month: number) => {
   
   // 1日の曜日を取得
   let startDay = firstDay.getDay();
-  if (startDay === 0) startDay = 7; // 日曜日を7とする
+  if (startDay === 0) startDay = 7;
   
   // 前の月の日付を追加
   for (let i = startDay - 1; i > 0; i--) {
