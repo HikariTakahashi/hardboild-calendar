@@ -133,8 +133,8 @@ const deleteTime = () => {
 const formatTimeDisplay = (day) => {
   const { start, end } = times.value[day.toDateString()] || {};
   if (start === "00:00" && end === "00:00") return "終日";
-  if (start === "00:00") return `~${end}`;
-  if (end === "00:00") return `${start}~終日`;
+  if (start === "00:00") return `~ ${end}`;
+  if (end === "00:00") return `${start} ~ 終日`;
   return `${start} ~ ${end}`;
 };
 
