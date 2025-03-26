@@ -1,29 +1,29 @@
 <template>
   <div
-    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-5 rounded shadow-lg"
+    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    @click.self="$emit('close')"
   >
-    <h3 class="text-lg font-bold mb-2">時刻データ一覧</h3>
-    <textarea
-      ref="textArea"
-      class="w-full h-40 border p-2 rounded resize-none"
-      >{{ formattedText }}</textarea
-    >
-    <div class="mt-3 flex justify-end gap-x-2">
-      <button
-        @click="copyText"
-        class="px-3 py-1 bg-blue-500 text-white rounded"
+    <div class="w-96 bg-white px-5 py-2 rounded shadow-lg relative">
+      <h3 class="flex justify-center text-lg font-bold mb-2">時刻データ一覧</h3>
+      <textarea
+        ref="textArea"
+        class="w-full h-60 border p-2 rounded resize-none"
+        >{{ formattedText }}</textarea
       >
-        コピー
-      </button>
-      <button @click="$emit('close')" class="px-3 py-1 bg-gray-300 rounded">
-        閉じる
-      </button>
+      <div class="flex justify-end gap-x-2">
+        <button-square @click="copyText" label="コピー" color="bg-blue-400" />
+        <button-square
+          @click="$emit('close')"
+          label="閉じる"
+          color="bg-gray-400"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 
 const props = defineProps({
   formattedText: String,
@@ -60,5 +60,20 @@ const formattedText = computed(() => {
       });
     })
     .join("\n");
+});
+
+// ESCキーを押したらモーダルを閉じる
+const handleEscape = (event) => {
+  if (event.key === "Escape") {
+    emit("close");
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleEscape);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", handleEscape);
 });
 </script>
