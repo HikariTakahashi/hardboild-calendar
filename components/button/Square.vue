@@ -1,23 +1,28 @@
 <template>
   <button
     @click="$emit('click')"
-    class="w-20 h-12 border rounded-full hover:{{ color }}"
+    :class="[baseClass, isHovered ? color : '']"
+    @mouseover="isHovered = true"
+    @mouseleave="isHovered = false"
   >
     {{ label }}
   </button>
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   label: {
     type: String,
     required: true,
   },
   color: {
     type: String,
-    required: true,
+    required: false,
   },
 });
 
-defineEmits(["click"]);
+const emit = defineEmits(["click"]);
+
+const isHovered = ref(false);
+const baseClass = "w-20 h-12 border rounded-full transition duration-200";
 </script>
