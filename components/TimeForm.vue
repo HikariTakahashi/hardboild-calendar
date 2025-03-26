@@ -38,18 +38,8 @@
       <div class="pr-5">終了時刻</div>
     </div>
     <div class="pr-3 pb-3 mt-3 flex justify-end gap-x-2">
-      <button
-        @click="save"
-        class="px-3 py-1 border rounded-full hover:bg-blue-200"
-      >
-        保存
-      </button>
-      <button
-        @click="deleteTime"
-        class="px-3 py-1 border rounded-full hover:bg-red-200"
-      >
-        削除
-      </button>
+      <button-square @click="save" label="保存" color="bg-blue-200" />
+      <button-square @click="deleteTime" label="削除" color="bg-red-200" />
     </div>
   </div>
 </template>
@@ -94,8 +84,23 @@ const save = () => {
 const deleteTime = () => {
   startTime.value = "";
   endTime.value = "";
-  emit("delete"); // 削除イベントを送信
+  emit("delete");
 };
+
+// ESCキーを押したらFormを閉じる
+const handleEscape = (event) => {
+  if (event.key === "Escape") {
+    emit("close");
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("keydown", handleEscape);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("keydown", handleEscape);
+});
 </script>
 
 <style scoped></style>
