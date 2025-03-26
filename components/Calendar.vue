@@ -1,17 +1,25 @@
 <template>
-  <div class="w-full h-full flex flex-col px-2">
+  <div class="w-full h-full flex flex-col sm:px-2">
     <div
-      class="flex justify-end items-center text-center font-bold py-2 gap-x-5"
+      class="flex flex-col sm:flex-row justify-between items-center text-center font-bold p-2"
     >
-      <span class="text-2xl">{{ year }}年 {{ month + 1 }}月</span>
-      <CircleButton @click="prevMonth" label="&#9664;" />
-      <CircleButton @click="nextMonth" label="&#9654;" />
-      <button
-        @click="openEditForm"
-        class="w-20 h-12 border rounded-full hover:bg-green-400"
+      <span class="md:text-2xl sm:text-2xl"
+        >スケジュールテキスト生成ジェネレータ</span
       >
-        Edit
-      </button>
+      <div
+        class="flex md:justify-end sm:justify-start items-center gap-x-3 mt-2 sm:mt-0"
+      >
+        <span class="md:text-2xl sm:text-2xl"
+          >{{ year }}年 {{ month + 1 }}月</span
+        >
+        <button-circle @click="prevMonth" label="&#9664;" />
+        <button-circle @click="nextMonth" label="&#9654;" />
+        <button-square
+          @click="openEditForm"
+          label="Edit"
+          color="bg-green-400"
+        />
+      </div>
     </div>
 
     <div class="grid grid-cols-7 text-center font-bold pb-1">
@@ -33,23 +41,9 @@
         {{ day.getDate() }}
         <div
           v-if="times[day.toDateString()]"
-          class="text-sm text-blue-500 mt-1"
+          class="text-sm text-blue-500 text-center mt-1"
         >
-          <template
-            v-if="
-              times[day.toDateString()].start === '00:00' &&
-              times[day.toDateString()].end === '00:00'
-            "
-          >
-            終日
-          </template>
-          <template v-else-if="times[day.toDateString()].end === '00:00'">
-            {{ times[day.toDateString()].start }} ~ 終日
-          </template>
-          <template v-else>
-            {{ times[day.toDateString()].start }} ~
-            {{ times[day.toDateString()].end }}
-          </template>
+          {{ formatTimeDisplay(day) }}
         </div>
       </div>
     </div>
@@ -78,6 +72,7 @@ import { getCalendarDays } from "~/utils/dateUtils";
 import TimeForm from "~/components/TimeForm.vue";
 import EditForm from "~/components/EditForm.vue";
 
+// dateUtilsからデータインポート
 const today = new Date();
 const year = ref(today.getFullYear());
 const month = ref(today.getMonth());
@@ -93,6 +88,7 @@ const updateCalendar = () => {
   days.value = getCalendarDays(year.value, month.value);
 };
 
+// 先月に遷移
 const prevMonth = () => {
   if (month.value === 0) {
     month.value = 11;
@@ -103,6 +99,7 @@ const prevMonth = () => {
   updateCalendar();
 };
 
+// 次月に遷移
 const nextMonth = () => {
   if (month.value === 11) {
     month.value = 0;
@@ -113,10 +110,12 @@ const nextMonth = () => {
   updateCalendar();
 };
 
+// 時間設定フォーム表示
 const openTimeForm = (day) => {
   selectedDay.value = day;
 };
 
+// 時刻セーブ
 const saveTime = ({ start, end }) => {
   if (start && end) {
     times.value[selectedDay.value.toDateString()] = { start, end };
@@ -124,9 +123,19 @@ const saveTime = ({ start, end }) => {
   selectedDay.value = null;
 };
 
+// 時刻削除
 const deleteTime = () => {
   delete times.value[selectedDay.value.toDateString()];
   selectedDay.value = null;
+};
+
+// 終日と表示
+const formatTimeDisplay = (day) => {
+  const { start, end } = times.value[day.toDateString()] || {};
+  if (start === "00:00" && end === "00:00") return "終日";
+  if (start === "00:00") return `~${end}`;
+  if (end === "00:00") return `${start}~終日`;
+  return `${start} ~ ${end}`;
 };
 
 const formattedText = computed(() => {
@@ -136,9 +145,7 @@ const formattedText = computed(() => {
       const formattedDate = `${d.getMonth() + 1}/${d.getDate()}(${
         weekDays[d.getDay()]
       })`;
-      if (start === "00:00" && end === "00:00") return `${formattedDate} 終日`;
-      if (end === "00:00") return `${formattedDate} ${start}~終日`;
-      return `${formattedDate} ${start}~${end}`;
+      return `${formattedDate} ${formatTimeDisplay(d)}`;
     })
     .join("\n");
 });
