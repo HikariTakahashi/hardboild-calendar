@@ -67,90 +67,25 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { getCalendarDays } from "~/utils/dateUtils";
+import { useCalendar } from "~/components/CalendarLogic.vue";
 import TimeForm from "~/components/TimeForm.vue";
 import EditForm from "~/components/EditForm.vue";
 
-// dateUtilsからデータインポート
-const today = new Date();
-const year = ref(today.getFullYear());
-const month = ref(today.getMonth());
-const days = ref(getCalendarDays(year.value, month.value));
-
-const times = ref({});
-const selectedDay = ref(null);
-const showEditForm = ref(false);
-
-const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-const updateCalendar = () => {
-  days.value = getCalendarDays(year.value, month.value);
-};
-
-// 先月に遷移
-const prevMonth = () => {
-  if (month.value === 0) {
-    month.value = 11;
-    year.value--;
-  } else {
-    month.value--;
-  }
-  updateCalendar();
-};
-
-// 次月に遷移
-const nextMonth = () => {
-  if (month.value === 11) {
-    month.value = 0;
-    year.value++;
-  } else {
-    month.value++;
-  }
-  updateCalendar();
-};
-
-// 時間設定フォーム表示
-const openTimeForm = (day) => {
-  selectedDay.value = day;
-};
-
-// 時刻セーブ
-const saveTime = ({ start, end }) => {
-  if (start && end) {
-    times.value[selectedDay.value.toDateString()] = { start, end };
-  }
-  selectedDay.value = null;
-};
-
-// 時刻削除
-const deleteTime = () => {
-  delete times.value[selectedDay.value.toDateString()];
-  selectedDay.value = null;
-};
-
-// 終日と表示
-const formatTimeDisplay = (day) => {
-  const { start, end } = times.value[day.toDateString()] || {};
-  if (start === "00:00" && end === "00:00") return "終日";
-  if (start === "00:00") return `~ ${end}`;
-  if (end === "00:00") return `${start} ~ 終日`;
-  return `${start} ~ ${end}`;
-};
-
-const formattedText = computed(() => {
-  return Object.entries(times.value)
-    .map(([date, { start, end }]) => {
-      const d = new Date(date);
-      const formattedDate = `${d.getMonth() + 1}/${d.getDate()}(${
-        weekDays[d.getDay()]
-      })`;
-      return `${formattedDate} ${formatTimeDisplay(d)}`;
-    })
-    .join("\n");
-});
-
-const openEditForm = () => {
-  showEditForm.value = true;
-};
+const {
+  year,
+  month,
+  days,
+  times,
+  selectedDay,
+  showEditForm,
+  prevMonth,
+  nextMonth,
+  openTimeForm,
+  saveTime,
+  deleteTime,
+  formatTimeDisplay,
+  formattedText,
+  openEditForm,
+  weekDays,
+} = useCalendar();
 </script>

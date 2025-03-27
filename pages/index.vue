@@ -1,3 +1,3 @@
 <template>
-    <Calendar/>
+  <calendar-view />
 </template>
