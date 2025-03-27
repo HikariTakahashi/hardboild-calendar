@@ -1,15 +1,14 @@
-<script>
 import { ref, computed } from "vue";
 import { getCalendarDays } from "~/utils/dateUtils";
 
 export function useCalendar() {
   const today = new Date();
-  const year = ref(today.getFullYear());
-  const month = ref(today.getMonth());
-  const days = ref(getCalendarDays(year.value, month.value));
-  const times = ref({});
-  const selectedDay = ref(null);
-  const showEditForm = ref(false);
+  const year = ref<number>(today.getFullYear());
+  const month = ref<number>(today.getMonth());
+  const days = ref<Date[]>(getCalendarDays(year.value, month.value));
+  const times = ref<Record<string, { start: string; end: string }>>({});
+  const selectedDay = ref<Date | null>(null);
+  const showEditForm = ref<boolean>(false);
 
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
@@ -37,23 +36,25 @@ export function useCalendar() {
     updateCalendar();
   };
 
-  const openTimeForm = (day) => {
+  const openTimeForm = (day: Date) => {
     selectedDay.value = day;
   };
 
-  const saveTime = ({ start, end }) => {
-    if (start && end) {
+  const saveTime = ({ start, end }: { start: string; end: string }) => {
+    if (selectedDay.value && start && end) {
       times.value[selectedDay.value.toDateString()] = { start, end };
     }
     selectedDay.value = null;
   };
 
   const deleteTime = () => {
-    delete times.value[selectedDay.value.toDateString()];
-    selectedDay.value = null;
+    if (selectedDay.value) {
+      delete times.value[selectedDay.value.toDateString()];
+      selectedDay.value = null;
+    }
   };
 
-  const formatTimeDisplay = (day) => {
+  const formatTimeDisplay = (day: Date): string => {
     const { start, end } = times.value[day.toDateString()] || {};
     if (start === "00:00" && end === "00:00") return "終日";
     if (start === "00:00") return `~ ${end}`;
@@ -61,7 +62,7 @@ export function useCalendar() {
     return `${start} ~ ${end}`;
   };
 
-  const formattedText = computed(() => {
+  const formattedText = computed<string>(() => {
     return Object.entries(times.value)
       .map(([date, { start, end }]) => {
         const d = new Date(date);
@@ -95,4 +96,3 @@ export function useCalendar() {
     weekDays,
   };
 }
-</script>

@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { useCalendar } from "~/utils/CalendarLogic";
+import TimeForm from "~/components/TimeForm.vue";
+import EditForm from "~/components/EditForm.vue";
+
+const {
+  year,
+  month,
+  days,
+  times,
+  selectedDay,
+  showEditForm,
+  prevMonth,
+  nextMonth,
+  openTimeForm,
+  saveTime,
+  deleteTime,
+  formatTimeDisplay,
+  formattedText,
+  openEditForm,
+  weekDays,
+} = useCalendar();
+</script>
+
 <template>
   <div class="w-full h-full flex flex-col sm:px-2">
     <div
@@ -32,7 +56,7 @@
     >
       <div
         v-for="day in days"
-        :key="day"
+        :key="day.toDateString()"
         class="flex flex-col items-center justify-center border rounded transition-transform duration-200 hover:-translate-y-1 relative shadow-md"
         :class="{ 'bg-gray-100 text-gray-400': day.getMonth() !== month }"
         style="min-height: calc(85vh / 6)"
@@ -65,27 +89,3 @@
     />
   </div>
 </template>
-
-<script setup>
-import { useCalendar } from "~/components/CalendarLogic.vue";
-import TimeForm from "~/components/TimeForm.vue";
-import EditForm from "~/components/EditForm.vue";
-
-const {
-  year,
-  month,
-  days,
-  times,
-  selectedDay,
-  showEditForm,
-  prevMonth,
-  nextMonth,
-  openTimeForm,
-  saveTime,
-  deleteTime,
-  formatTimeDisplay,
-  formattedText,
-  openEditForm,
-  weekDays,
-} = useCalendar();
-</script>
