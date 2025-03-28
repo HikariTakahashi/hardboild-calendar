@@ -1,9 +1,7 @@
 import { onBeforeUnmount, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
-export function useLeaveConfirm(
-  message: string = "このページを離れると、変更が失われる可能性があります。"
-) {
+export function useConfirm(message: string) {
   const router = useRouter();
 
   const handleBeforeUnload = (event: BeforeUnloadEvent) => {

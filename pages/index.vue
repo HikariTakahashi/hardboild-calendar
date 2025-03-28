@@ -3,6 +3,9 @@
 </template>
 
 <script setup>
-import { useconfirm } from "~/utils/confirm";
-useconfirm;
+import { useConfirm } from "~/utils/confirm";
+import { useRouter } from "#imports";
+
+const router = useRouter();
+useConfirm("このページを離れると、変更が失われる可能性があります。");
 </script>

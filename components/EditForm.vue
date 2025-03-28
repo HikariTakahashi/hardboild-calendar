@@ -4,14 +4,14 @@
     @click.self="$emit('close')"
   >
     <div class="w-96 bg-white px-5 py-2 rounded shadow-lg relative">
-      <h3 class="flex justify-center text-lg font-bold mb-2">時刻データ一覧</h3>
+      <h3 class="flex justify-center text-lg font-bold mb-2">生成データ</h3>
       <textarea
         ref="textArea"
         class="w-full h-60 border p-2 rounded resize-none"
         >{{ formattedText }}</textarea
       >
       <div class="flex justify-end gap-x-2">
-        <button-square @click="copyText" label="コピー" color="bg-blue-400" />
+        <button-square @click="copyText" label="コピー" color="bg-blue-200" />
         <button-square
           @click="$emit('close')"
           label="閉じる"
@@ -35,7 +35,7 @@ const copyText = () => {
   if (textArea.value) {
     textArea.value.select();
     document.execCommand("copy");
-    alert("コピーしました！");
+    alert("生成データをコピーしました");
   }
 };
 
