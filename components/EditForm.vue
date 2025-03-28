@@ -15,7 +15,7 @@
         <button-square
           @click="$emit('close')"
           label="閉じる"
-          color="bg-gray-400"
+          color="bg-gray-200"
         />
       </div>
     </div>
