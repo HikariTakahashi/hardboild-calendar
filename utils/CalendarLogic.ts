@@ -1,16 +1,20 @@
-import { ref, computed } from "vue";
+import { computed } from "vue";
 import { getCalendarDays } from "~/utils/dateUtils";
 
 export function useCalendar() {
-  const today = new Date();
-  const year = ref<number>(today.getFullYear());
-  const month = ref<number>(today.getMonth());
-  const days = ref<Date[]>(getCalendarDays(year.value, month.value));
-  const times = ref<Record<string, { start: string; end: string }>>({});
-  const selectedDay = ref<Date | null>(null);
-  const showEditForm = ref<boolean>(false);
+  const year = useState<number>("year", () => new Date().getFullYear());
+  const month = useState<number>("month", () => new Date().getMonth());
+  const days = useState<Date[]>("days", () =>
+    getCalendarDays(year.value, month.value)
+  );
+  const times = useState<Record<string, { start: string; end: string }>>(
+    "times",
+    () => ({})
+  );
+  const selectedDay = useState<Date | null>("selectedDay", () => null);
+  const showEditForm = useState<boolean>("showEditForm", () => false);
 
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const updateCalendar = () => {
     days.value = getCalendarDays(year.value, month.value);

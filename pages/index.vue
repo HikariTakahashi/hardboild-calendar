@@ -1,4 +1,5 @@
 <template>
+  <generator-header />
   <calendar-view />
 </template>
 
