@@ -1,8 +1,20 @@
-export const getCalendarDays = (year: number, month: number) => {
+// dateUtils.ts
+
+export type CalendarDay = {
+  date: Date;
+  isToday: boolean;
+};
+
+export const getCalendarDays = (year: number, month: number): CalendarDay[] => {
+  const today = new Date();
+  const todayY = today.getFullYear();
+  const todayM = today.getMonth();
+  const todayD = today.getDate();
+
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
 
-  const days = [];
+  const days: CalendarDay[] = [];
 
   // 1日の曜日を取得
   let startDay = firstDay.getDay();
@@ -10,13 +22,26 @@ export const getCalendarDays = (year: number, month: number) => {
 
   // 前の月の日付を追加
   for (let i = startDay; i > 0; i--) {
-    const prevDate = new Date(year, month, -i + 1);
-    days.push(prevDate);
+    const d = new Date(year, month, -i + 1);
+    days.push({
+      date: d,
+      isToday:
+        d.getFullYear() === todayY &&
+        d.getMonth() === todayM &&
+        d.getDate() === todayD,
+    });
   }
 
-  // 現在の月の日付を追加
+  // 今月の日付を追加
   for (let i = 1; i <= lastDay.getDate(); i++) {
-    days.push(new Date(year, month, i));
+    const d = new Date(year, month, i);
+    days.push({
+      date: d,
+      isToday:
+        d.getFullYear() === todayY &&
+        d.getMonth() === todayM &&
+        d.getDate() === todayD,
+    });
   }
 
   // 最後の日の曜日を取得
@@ -25,8 +50,14 @@ export const getCalendarDays = (year: number, month: number) => {
 
   // 次の月の日付を追加
   for (let i = 1; i <= 7 - endDay; i++) {
-    const nextDate = new Date(year, month + 1, i);
-    days.push(nextDate);
+    const d = new Date(year, month + 1, i);
+    days.push({
+      date: d,
+      isToday:
+        d.getFullYear() === todayY &&
+        d.getMonth() === todayM &&
+        d.getDate() === todayD,
+    });
   }
 
   return days;
