@@ -1,10 +1,11 @@
 import { computed } from "vue";
 import { getCalendarDays } from "~/utils/dateUtils";
+import type { CalendarDay } from "~/utils/dateUtils";
 
 export function useCalendar() {
   const year = useState<number>("year", () => new Date().getFullYear());
   const month = useState<number>("month", () => new Date().getMonth());
-  const days = useState<Date[]>("days", () =>
+  const days = useState<CalendarDay[]>("days", () =>
     getCalendarDays(year.value, month.value)
   );
   const times = useState<Record<string, { start: string; end: string }>>(
@@ -82,6 +83,14 @@ export function useCalendar() {
     showEditForm.value = true;
   };
 
+  const isToday = (day: Date): boolean => {
+    return (
+      day.getFullYear() === day.getFullYear() &&
+      day.getMonth() === day.getMonth() &&
+      day.getDate() === day.getDate()
+    );
+  };
+
   return {
     year,
     month,
@@ -98,5 +107,6 @@ export function useCalendar() {
     formattedText,
     openEditForm,
     weekDays,
+    isToday,
   };
 }
