@@ -1,6 +1,9 @@
 import { computed } from "vue";
 import { getCalendarDays } from "~/utils/dateUtils";
 import type { CalendarDay } from "~/utils/dateUtils";
+import { onMounted, onUnmounted } from "vue"; // 追加
+
+let dateCheckInterval: number;
 
 export function useCalendar() {
   const year = useState<number>("year", () => new Date().getFullYear());
@@ -90,6 +93,27 @@ export function useCalendar() {
       day.getDate() === day.getDate()
     );
   };
+
+  onMounted(() => {
+    dateCheckInterval = window.setInterval(() => {
+      const now = new Date();
+      const currentDay = now.getDate();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
+
+      if (
+        currentDay !== new Date().getDate() ||
+        currentMonth !== month.value ||
+        currentYear !== year.value
+      ) {
+        updateCalendar();
+      }
+    }, 60 * 1000);
+  });
+
+  onUnmounted(() => {
+    clearInterval(dateCheckInterval);
+  });
 
   return {
     year,
