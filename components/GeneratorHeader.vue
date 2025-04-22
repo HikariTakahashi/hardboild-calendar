@@ -8,6 +8,7 @@
     <div
       class="flex md:justify-end sm:justify-start items-center gap-x-3 mt-2 sm:mt-0"
     >
+      <!-- 年・月の表示 -->
       <span class="md:text-2xl sm:text-2xl"
         >{{ year }}年 {{ month + 1 }}月</span
       >

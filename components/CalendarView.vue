@@ -7,21 +7,23 @@
 
     <div class="flex-1 grid grid-cols-7 grid-rows-6 gap-2 h-80vh">
       <!-- 日の表示 -->
+      <!-- 日付のブロックを表示 -->
       <div
         v-for="dayObj in days"
         :key="dayObj.date.toDateString()"
         class="flex flex-col items-center border rounded transition-transform duration-200 hover:-translate-y-1 relative shadow-md"
         :class="{
-          'bg-gray-100': dayObj.date.getMonth() !== month,
+          'bg-gray-100': dayObj.date.getMonth() !== month, //先月の日付を薄く表示
         }"
         style="min-height: calc(83vh / 6)"
         @click="openTimeForm(dayObj.date)"
       >
+        <!-- 日付のテキストを表示 -->
         <div
           class="flex items-center justify-center w-8 h-8 mt-1"
           :class="{
             'text-gray-500': dayObj.date.getMonth() !== month,
-            'font-bold rounded-full bg-green-600 text-white': dayObj.isToday,
+            'font-bold rounded-full bg-green-600 text-white': dayObj.isToday, //今日の日付を強調表示
           }"
         >
           {{ dayObj.date.getDate() }}
