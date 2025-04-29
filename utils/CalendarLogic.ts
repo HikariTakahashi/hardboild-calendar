@@ -1,7 +1,7 @@
 import { computed } from "vue";
 import { getCalendarDays } from "~/utils/dateUtils";
 import type { CalendarDay } from "~/utils/dateUtils";
-import { onMounted, onUnmounted } from "vue"; // 追加
+import { onMounted, onUnmounted } from "vue";
 
 let dateCheckInterval: number;
 
@@ -72,7 +72,7 @@ export function useCalendar() {
 
   const formattedText = computed<string>(() => {
     return Object.entries(times.value)
-      .map(([date, { start, end }]) => {
+      .map(([date]) => {
         const d = new Date(date);
         const formattedDate = `${d.getMonth() + 1}/${d.getDate()}(${
           weekDays[d.getDay()]
